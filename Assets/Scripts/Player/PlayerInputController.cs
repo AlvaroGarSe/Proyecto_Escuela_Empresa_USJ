@@ -13,7 +13,7 @@ using UnityEngine.InputSystem;
 public class PlayerInputController : MonoBehaviour
 {
     public PlayerInput PlayerInputComponent { get; private set; }
-    [SerializeField] private int m_PlayerID;
+    public int PlayerID => PlayerInputComponent.playerIndex;
 
     #region Input Actions
     [SerializeField] private InputActionReference m_MoveAction;
@@ -29,7 +29,7 @@ public class PlayerInputController : MonoBehaviour
 
         foreach (var device in PlayerInputComponent.devices)
         {
-            Debug.Log($"Player {m_PlayerID} is using device: {device.displayName}");
+            Debug.Log($"Player {PlayerID} is using device: {device.displayName}");
         }
     }
 
@@ -51,7 +51,7 @@ public class PlayerInputController : MonoBehaviour
             Vector2 moveInput = m_MoveAction.action.ReadValue<Vector2>();
             MoveInput = moveInput;
             OnMoveInput.Invoke(moveInput);
-            Debug.Log($"Player {m_PlayerID} Move Input: {moveInput}");
+            Debug.Log($"Player {PlayerID} Move Input: {moveInput}");
         }
     }
 
