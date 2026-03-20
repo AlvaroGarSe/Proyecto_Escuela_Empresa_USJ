@@ -26,6 +26,11 @@ public class PlayerInputController : MonoBehaviour
     private void Awake()
     {
         PlayerInputComponent = GetComponent<PlayerInput>();
+
+        foreach (var device in PlayerInputComponent.devices)
+        {
+            Debug.Log($"Player {m_PlayerID} is using device: {device.displayName}");
+        }
     }
 
     private void OnEnable()
@@ -46,6 +51,7 @@ public class PlayerInputController : MonoBehaviour
             Vector2 moveInput = m_MoveAction.action.ReadValue<Vector2>();
             MoveInput = moveInput;
             OnMoveInput.Invoke(moveInput);
+            Debug.Log($"Player {m_PlayerID} Move Input: {moveInput}");
         }
     }
 
