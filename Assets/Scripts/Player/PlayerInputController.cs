@@ -2,12 +2,13 @@
 // Script done by Jorge Kojtych
 // Player component that handles and exposes the input for each player
 // In progress
-// To add more actions, add more InputActionReferences and call the TryEnableAction and TryDisableAction functions in the corresponding functions
+// To add more actions, add more InputActionReferences and corresponding callback methods in OnEnable and OnDisable
 // *************************************************************** //
 
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using System;
 
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerInputController : MonoBehaviour
@@ -16,6 +17,7 @@ public class PlayerInputController : MonoBehaviour
     public int PlayerID => PlayerInputComponent.playerIndex;
 
     #region Input Actions
+    [Header("Input Action References")]
     [SerializeField] private InputActionReference m_MoveAction;
     public Vector2 MoveInput { get; private set; }
     public UnityEvent<Vector2> OnMoveInput;
@@ -29,61 +31,93 @@ public class PlayerInputController : MonoBehaviour
 
         foreach (var device in PlayerInputComponent.devices)
         {
-            Debug.Log($"Player {PlayerID} is using device: {device.displayName}");
+            Debug.Log($"Player {PlayerID} is using device: {device.displayName}", this);
         }
     }
 
     private void OnEnable()
     {
-        TryEnableAction(m_MoveAction);
+        SubscribeToAction(m_MoveAction, OnMovePerformed, OnMoveCanceled);
+        // Subscribe to more actions here as needed (by InputActionReference)     
     }
 
     private void OnDisable()
     {
-        TryDisableAction(m_MoveAction);
+        UnsubscribeFromAction(m_MoveAction, OnMovePerformed, OnMoveCanceled);
+        // Unsubscribe from more actions here as needed (by InputActionReference)
     }
 
-    private void Update()
+    #region Input Callbacks
+    private void OnMovePerformed(InputAction.CallbackContext context)
     {
-        // MOVE
-        if (IsActionValidAndEnabled(m_MoveAction))
+        Vector2 moveInput = context.ReadValue<Vector2>();
+        MoveInput = moveInput;
+        OnMoveInput.Invoke(moveInput);
+        Debug.Log($"Player {PlayerID} Move Input: {moveInput}", this);
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        MoveInput = Vector2.zero;
+        OnMoveInput.Invoke(Vector2.zero);
+        Debug.Log($"Player {PlayerID} Move Input: Canceled", this);
+    }
+    #endregion
+
+    #region Input Action Methods
+    private void SubscribeToAction(InputActionReference actionRef, Action<InputAction.CallbackContext> onPerformed, Action<InputAction.CallbackContext> onCanceled)
+    {
+        InputAction action = GetPlayerActionByRef(actionRef);
+        if (action != null)
         {
-            Vector2 moveInput = m_MoveAction.action.ReadValue<Vector2>();
-            MoveInput = moveInput;
-            OnMoveInput.Invoke(moveInput);
-            Debug.Log($"Player {PlayerID} Move Input: {moveInput}");
+            action.performed += onPerformed;
+            action.canceled += onCanceled;
         }
     }
 
-    #region Private Helper Methods for Input Actions
-    private void TryEnableAction(InputActionReference actionRef)
+    private void UnsubscribeFromAction(InputActionReference actionRef, Action<InputAction.CallbackContext> onPerformed, Action<InputAction.CallbackContext> onCanceled)
     {
-        if (IsActionValid(actionRef) && !actionRef.action.enabled)
+        InputAction action = GetPlayerActionByRef(actionRef);
+        if (action != null)
         {
-            actionRef.action.Enable();
-        }
-        else if (!IsActionValid(actionRef))
-        {
-            Debug.LogWarning($"Input Action Reference {actionRef} is not valid on {gameObject.name}");
+            action.performed -= onPerformed;
+            action.canceled -= onCanceled;
         }
     }
 
-    private void TryDisableAction(InputActionReference actionRef)
+    private InputAction GetPlayerActionByRef(InputActionReference actionRef)
     {
-        if (IsActionValidAndEnabled(actionRef))
+        if (actionRef == null || actionRef.action == null)
         {
-            actionRef.action.Disable();
+            Debug.LogWarning($"InputActionReference is null on {gameObject.name}", this);
+            return null;
         }
+
+        return GetPlayerActionByID(actionRef.action.id);
     }
 
-    private bool IsActionValid(InputActionReference actionRef)
+    // Ensures input is active and finds the action in this player's aciton map
+    private InputAction GetPlayerActionByID(Guid actionId)
     {
-        return actionRef != null && actionRef.action != null;
+        EnsureInputActive();
+
+        InputAction playerAction = PlayerInputComponent.actions.FindAction(actionId.ToString());
+        if (playerAction == null)
+        {
+            Debug.LogWarning($"Could not find action with ID '{actionId}' in player {PlayerID}'s actions", this);
+            return null;
+        }
+
+        if (!playerAction.enabled) playerAction.Enable();
+        return playerAction;
     }
 
-    private bool IsActionValidAndEnabled(InputActionReference actionRef)
+    private void EnsureInputActive()
     {
-        return IsActionValid(actionRef) && actionRef.action.enabled;
+        if (!PlayerInputComponent.inputIsActive)
+        {
+            PlayerInputComponent.ActivateInput();
+        }
     }
     #endregion
 }
