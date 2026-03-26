@@ -1,3 +1,8 @@
+// *************************************************************** //
+// Script done by Jorge Kojtych
+// Singleton class that persists across scenes and instantiates itself if it doesn't exist when first accessed.
+// *************************************************************** //
+
 using UnityEngine;
 
 /// <summary>

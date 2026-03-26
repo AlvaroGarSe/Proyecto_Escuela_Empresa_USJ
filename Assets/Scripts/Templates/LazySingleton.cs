@@ -1,3 +1,8 @@
+// *************************************************************** //
+// Script done by Jorge Kojtych
+// Singleton class that instantiates itself if it doesn't exist.
+// *************************************************************** //
+
 using UnityEngine;
 
 /// <summary>

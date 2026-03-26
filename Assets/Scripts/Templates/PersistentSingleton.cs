@@ -1,3 +1,8 @@
+// *************************************************************** //
+// Script done by Jorge Kojtych
+// Singleton class that persists across scenes.
+// *************************************************************** //
+
 using UnityEngine;
 
 /// <summary>
