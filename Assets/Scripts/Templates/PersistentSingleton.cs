@@ -13,6 +13,7 @@ public abstract class PersistentSingleton<T> : MonoBehaviour where T : MonoBehav
     {
         if (Instance != null && Instance != this)
         {
+            Debug.LogWarning($"Multiple instances of singleton {typeof(T).Name} detected. Destroying duplicate.", this);
             Destroy(gameObject);
             return;
         }

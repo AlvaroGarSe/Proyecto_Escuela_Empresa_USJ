@@ -9,7 +9,7 @@
 
 using UnityEngine;
 
-public abstract class BasePlayerController : MonoBehaviour
+public class BasePlayerController : MonoBehaviour
 {
     public PlayerInputController InputController { get; private set; }
 
@@ -22,5 +22,11 @@ public abstract class BasePlayerController : MonoBehaviour
         {
             Debug.LogWarning("Player controller has no PlayerInputController component.", this);
         }
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // Use "InstanceExists" check to avoid instantiating a new object in OnDestroy
+        if (MultiplayerManager.InstanceExists) MultiplayerManager.Instance.UnregisterPlayer(this);
     }
 }

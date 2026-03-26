@@ -8,29 +8,18 @@
 
 using UnityEngine;
 
-public class MultiplayerManager : MonoBehaviour
+public class MultiplayerManager : PersistentLazySingleton<MultiplayerManager>
 {
     #region Variables
-    public static MultiplayerManager Instance { get; private set; }
-
     [SerializeField] private int m_MaxPlayers = 4;
     private int m_PlayerCount = 0;
     private BasePlayerController[] m_Players;
     #endregion
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Debug.LogWarning("Multiple instances of MultiplayerManager detected. Destroying duplicate.");
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            Initialize();
-        }
+        base.Awake();
+        Initialize();
     }
 
     private void Initialize()
@@ -51,5 +40,27 @@ public class MultiplayerManager : MonoBehaviour
         {
             Debug.LogWarning($"Tried to add player {player.name}, but player count is already at maximum.", player);
         }
+    }
+
+    public void UnregisterPlayer(BasePlayerController player)
+    {
+        for (int i = 0; i < m_PlayerCount; i++)
+        {
+            if (m_Players[i] == player)
+            {
+                // Shift remaining players down to fill the gap
+                for (int j = i; j < m_PlayerCount - 1; j++)
+                {
+                    m_Players[j] = m_Players[j + 1];
+                }
+                m_Players[m_PlayerCount - 1] = null;
+                m_PlayerCount--;
+
+                Debug.Log("Player unregistered. Total players: " + m_PlayerCount);
+                return;
+            }
+        }
+
+        Debug.LogWarning($"Tried to remove player {player.name}, but they were not found in the player list.", player);
     }
 }

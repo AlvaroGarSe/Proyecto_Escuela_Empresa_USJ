@@ -30,6 +30,7 @@ public abstract class PersistentLazySingleton<T> : MonoBehaviour where T : MonoB
     {
         if (s_Instance != null && s_Instance != this)
         {
+            Debug.LogWarning($"Multiple instances of singleton {typeof(T).Name} detected. Destroying duplicate.", this);
             Destroy(gameObject);
             return;
         }
