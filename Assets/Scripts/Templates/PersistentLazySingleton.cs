@@ -24,6 +24,8 @@ public abstract class PersistentLazySingleton<T> : MonoBehaviour where T : MonoB
         }
     }
 
+    public static bool InstanceExists => s_Instance != null;
+
     protected virtual void Awake()
     {
         if (s_Instance != null && s_Instance != this)

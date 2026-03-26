@@ -24,6 +24,8 @@ public abstract class LazySingleton<T> : MonoBehaviour where T : MonoBehaviour
         }
     }
 
+    public static bool InstanceExists => s_Instance != null;
+
     protected virtual void Awake()
     {
         if (s_Instance != null && s_Instance != this)
