@@ -5,7 +5,6 @@
 // *************************************************************** //
 
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class ScoreManagerTester : MonoBehaviour
 {
@@ -21,6 +20,17 @@ public class ScoreManagerTester : MonoBehaviour
         sc.AddPlayerLose(3);
         sc.AddPlayerLose(1);
         sc.AwardPointsToPlayers();
+
+        sc.ResetLoseOrder();
+        sc.SetMinigamePointRewards(new int[] {5000, 2000, 1000, 500});
+        sc.AddPlayerLose(3);
+        sc.AddPlayerLose(2);
+        sc.AddPlayerLose(1);
+        sc.AddPlayerLose(0);
+        sc.AwardPointsToPlayers();
+
+        int[] tot = sc.GetTotalPlayerScores();
+        Debug.Log($"Total: {tot[0]}, {tot[1]}, {tot[2]}, {tot[3]}",this);
     }
 
     // Update is called once per frame
