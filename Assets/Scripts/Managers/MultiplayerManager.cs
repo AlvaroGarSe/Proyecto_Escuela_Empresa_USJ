@@ -7,6 +7,7 @@
 // *************************************************************** //
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MultiplayerManager : PersistentLazySingleton<MultiplayerManager>
 {
@@ -14,9 +15,13 @@ public class MultiplayerManager : PersistentLazySingleton<MultiplayerManager>
     [SerializeField] private int m_MaxPlayers = 4;
     private int m_PlayerCount = 0;
     private BasePlayerController[] m_Players;
+
+    private int m_ConnectedInputDevices = 0;
     #endregion
 
     public int MaxPlayers => m_MaxPlayers;
+    public int PlayerCount => m_PlayerCount;
+    public int ConnectedInputDevices => m_ConnectedInputDevices;
 
     protected override void Awake()
     {
@@ -24,9 +29,38 @@ public class MultiplayerManager : PersistentLazySingleton<MultiplayerManager>
         Initialize();
     }
 
+    private void OnEnable()
+    {
+        InputSystem.onDeviceChange += OnDeviceChange;
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.onDeviceChange -= OnDeviceChange;
+    }
+
     private void Initialize()
     {
         m_Players = new BasePlayerController[m_MaxPlayers];
+
+        // Count initial connected devices
+        m_ConnectedInputDevices = Gamepad.all.Count;
+        bool hasKeyboard = Keyboard.current != null;
+        bool hasMouse = Mouse.current != null;
+        if (hasKeyboard || hasMouse) m_ConnectedInputDevices++;
+    }
+
+    private void OnDeviceChange(InputDevice device, InputDeviceChange change)
+    {
+        switch (change)
+        {
+            case InputDeviceChange.Added:
+                m_ConnectedInputDevices++;
+                break;
+            case InputDeviceChange.Removed:
+                m_ConnectedInputDevices--;
+                break;
+        }
     }
 
     public void RegisterPlayer(BasePlayerController player)

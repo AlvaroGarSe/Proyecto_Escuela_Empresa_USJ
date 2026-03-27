@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SumoMinigameManager : Singleton<SumoMinigameManager>
 {
@@ -12,10 +13,17 @@ public class SumoMinigameManager : Singleton<SumoMinigameManager>
 
     private void SpawnPlayers()
     {
-        for (int i = 0; i < MultiplayerManager.Instance.MaxPlayers; i++)
+        int playersToSpawn = MultiplayerManager.Instance.ConnectedInputDevices;
+
+        for (int i = 0; i < playersToSpawn; i++)
         {
             Vector2 spawnPosition = GetSpawnPosition(i);
             Instantiate(m_PlayerPrefab, spawnPosition, Quaternion.identity);
+        }
+
+        if (playersToSpawn < MultiplayerManager.Instance.MaxPlayers)
+        {
+            Debug.LogWarning($"Only {playersToSpawn} player(s) will be active due to the number of connected input devices.");
         }
     }
 
