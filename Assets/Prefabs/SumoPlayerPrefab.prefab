@@ -150,6 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf40f36cc39158ab8a8a98fdabf84e78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Deadzone: 0.25
   m_MoveActionRef: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   OnMoveInput:
     m_PersistentCalls:
@@ -210,7 +211,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!58 &4078756610132221624
 CircleCollider2D:
   m_ObjectHideFlags: 0

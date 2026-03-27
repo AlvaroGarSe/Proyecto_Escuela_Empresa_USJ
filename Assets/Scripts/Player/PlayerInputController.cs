@@ -16,6 +16,9 @@ public class PlayerInputController : MonoBehaviour
     public PlayerInput PlayerInputComponent { get; private set; }
     public int PlayerID => PlayerInputComponent.playerIndex;
 
+    [Header("Controller Settings")]
+    [SerializeField, Range(0f, 1f)] private float m_Deadzone = 0.1f;
+
     #region Input Actions
     [Header("Input Action References")]
     [SerializeField] private InputActionReference m_MoveActionRef;
@@ -56,7 +59,13 @@ public class PlayerInputController : MonoBehaviour
     #region Input Callbacks
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
-        Vector2 moveInput = context.ReadValue<Vector2>().normalized;
+        Vector2 moveInput = context.ReadValue<Vector2>();
+        if (moveInput.sqrMagnitude < m_Deadzone * m_Deadzone)
+        {
+            moveInput = Vector2.zero;
+        }
+        moveInput = moveInput.normalized;
+
         MoveInput = moveInput;
         OnMoveInput.Invoke(moveInput);
         Debug.Log($"Player {PlayerID} Move Input: {moveInput}", this);

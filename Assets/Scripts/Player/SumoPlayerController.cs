@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -37,5 +38,26 @@ public class SumoPlayerController : BasePlayerController
 
         Vector2 input = InputController.MoveInput;
         m_Rigidbody.AddForce(input * m_MoveForce);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ring"))
+        {
+            StartCoroutine(DieCoroutine(1f));
+        }
+    }
+
+    private IEnumerator DieCoroutine(float time)
+    {
+        float timer = 0f;
+        Vector3 originalScale = transform.localScale;
+        while (timer < time)
+        {
+            timer += Time.deltaTime;
+            float scale = Mathf.Lerp(1f, 0f, timer / time);
+            transform.localScale = originalScale * scale;
+            yield return null;
+        }
     }
 }
