@@ -5,6 +5,7 @@ public class SumoPlayerController : BasePlayerController
 {
     private Rigidbody2D m_Rigidbody;
     [SerializeField] private float m_MoveForce = 10f;
+    [SerializeField] private float m_RotationSpeed = 100f;
 
     protected override void Awake()
     {
@@ -13,6 +14,20 @@ public class SumoPlayerController : BasePlayerController
         if (m_Rigidbody == null)
         {
             Debug.LogWarning("SumoPlayerController has no Rigidbody component.", this);
+        }
+    }
+
+    private void Update()
+    {
+        if (InputController == null) return;
+
+        Vector2 moveInput = InputController.MoveInput;
+        if (moveInput.sqrMagnitude > 0.01f)
+        {
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                Quaternion.LookRotation(Vector3.forward, moveInput),
+                Time.deltaTime * m_RotationSpeed);
         }
     }
 

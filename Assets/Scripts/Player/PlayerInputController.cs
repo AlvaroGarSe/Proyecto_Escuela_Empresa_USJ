@@ -56,7 +56,7 @@ public class PlayerInputController : MonoBehaviour
     #region Input Callbacks
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
-        Vector2 moveInput = context.ReadValue<Vector2>();
+        Vector2 moveInput = context.ReadValue<Vector2>().normalized;
         MoveInput = moveInput;
         OnMoveInput.Invoke(moveInput);
         Debug.Log($"Player {PlayerID} Move Input: {moveInput}", this);
