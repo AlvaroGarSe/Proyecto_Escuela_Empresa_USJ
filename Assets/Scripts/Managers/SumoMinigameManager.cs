@@ -12,9 +12,11 @@ public class SumoMinigameManager : Singleton<SumoMinigameManager>
     [SerializeField] private SumoPlayerController m_PlayerPrefab;
 
     [field: SerializeField] public GameObject RingGameObject { get; private set; }
+    public Collider2D RingCollider { get; private set; }
 
     private void Start()
     {
+        RingCollider = RingGameObject.GetComponent<Collider2D>();
         SpawnPlayers();
     }
 

@@ -14,6 +14,9 @@ public class SumoPlayerController : BasePlayerController
     [SerializeField] private float m_MoveForce = 10f;
     [SerializeField] private float m_RotationSpeed = 100f;
 
+    [SerializeField] private GameObject m_AttackHitbox;
+
+    #region Unity Methods
     protected override void Awake()
     {
         base.Awake();
@@ -22,6 +25,8 @@ public class SumoPlayerController : BasePlayerController
         {
             Debug.LogWarning("SumoPlayerController has no Rigidbody component.", this);
         }
+
+        if (m_AttackHitbox != null) m_AttackHitbox.SetActive(false);
     }
 
     private void Update()
@@ -46,11 +51,47 @@ public class SumoPlayerController : BasePlayerController
         m_Rigidbody.AddForce(input * m_MoveForce);
     }
 
+    private void OnEnable()
+    {
+        if (InputController != null)
+        {
+            InputController.OnPrimaryAction.AddListener(OnPrimaryAction);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (InputController != null)
+        {
+            InputController.OnPrimaryAction.RemoveListener(OnPrimaryAction);
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject == SumoMinigameManager.Instance.RingGameObject)
         {
             StartCoroutine(DieCoroutine(1f));
+        }
+    }
+    #endregion
+
+    #region Action Handlers
+    private void OnPrimaryAction(bool isPressed)
+    {
+        if (m_AttackHitbox != null && isPressed && !m_AttackHitbox.activeSelf)
+        {
+            m_AttackHitbox.SetActive(true);
+            StartCoroutine(DisableHitboxAfterDelay(0.5f));
+        }
+    }
+    #endregion
+
+    public void ApplyKnockback(Vector2 direction, float force)
+    {
+        if (m_Rigidbody != null)
+        {
+            m_Rigidbody.AddForce(direction * force, ForceMode2D.Impulse);
         }
     }
 
@@ -67,5 +108,11 @@ public class SumoPlayerController : BasePlayerController
         }
 
         Destroy(gameObject);
+    }
+
+    private IEnumerator DisableHitboxAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (m_AttackHitbox != null) m_AttackHitbox.SetActive(false);
     }
 }
