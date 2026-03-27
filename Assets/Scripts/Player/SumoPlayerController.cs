@@ -42,7 +42,7 @@ public class SumoPlayerController : BasePlayerController
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Ring"))
+        if (collision.gameObject == SumoMinigameManager.Instance.RingGameObject)
         {
             StartCoroutine(DieCoroutine(1f));
         }

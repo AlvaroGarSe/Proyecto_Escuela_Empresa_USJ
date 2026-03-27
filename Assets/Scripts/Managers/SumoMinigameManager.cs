@@ -5,6 +5,8 @@ public class SumoMinigameManager : Singleton<SumoMinigameManager>
     [SerializeField] private Transform[] m_SpawnPoints;
     [SerializeField] private SumoPlayerController m_PlayerPrefab;
 
+    [field: SerializeField] public GameObject RingGameObject { get; private set; }
+
     private void Start()
     {
         SpawnPlayers();

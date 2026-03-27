@@ -644,6 +644,7 @@ MonoBehaviour:
   - {fileID: 1503135928}
   - {fileID: 1485953295}
   m_PlayerPrefab: {fileID: -4644611175341709461, guid: 7a72f4cdc0b2440edbf0a1f76eeea1be, type: 3}
+  <RingGameObject>k__BackingField: {fileID: 227940204}
 --- !u!1 &2034679800
 GameObject:
   m_ObjectHideFlags: 0
