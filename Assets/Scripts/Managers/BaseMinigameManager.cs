@@ -12,6 +12,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
+// Contains shared events accessible from any minigame manager
+public abstract class MinigameEvents : MonoBehaviour
+{
+    public static UnityEvent<IReadOnlyList<BasePlayerController>> OnGameOver = new();
+}
+
 public class BaseMinigameManager<TManager, TPlayer> : Singleton<TManager>
     where TManager : MonoBehaviour
     where TPlayer : BasePlayerController
@@ -22,8 +28,6 @@ public class BaseMinigameManager<TManager, TPlayer> : Singleton<TManager>
     // Lists to keep track of spawned players
     private List<TPlayer> m_AlivePlayers = new List<TPlayer>(4);
     private List<TPlayer> m_DeadPlayers = new List<TPlayer>(4);
-
-    public UnityEvent<IReadOnlyList<TPlayer>> OnGameOver;
 
     protected virtual void Start()
     {
@@ -87,7 +91,15 @@ public class BaseMinigameManager<TManager, TPlayer> : Singleton<TManager>
                 orderedPlayers.Add(m_DeadPlayers[i]);
             }
 
-            OnGameOver?.Invoke(orderedPlayers);
+            MinigameEvents.OnGameOver?.Invoke(orderedPlayers);
+        }
+        else if (m_AlivePlayers.Count == 0)
+        {
+            Debug.Log("All players have died. No winner.");
+
+            // All players are dead, so we just return the dead players in order of death
+            List<TPlayer> orderedPlayers = new List<TPlayer>(m_DeadPlayers);
+            MinigameEvents.OnGameOver?.Invoke(orderedPlayers);
         }
     }
 }

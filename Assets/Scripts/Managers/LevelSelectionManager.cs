@@ -34,6 +34,16 @@ public class LevelSelectionManager : PersistentLazySingleton<LevelSelectionManag
 #endif
     }
 
+    private void OnEnable()
+    {
+        MinigameEvents.OnGameOver.AddListener(HandleGameOver);
+    }
+
+    private void OnDisable()
+    {
+        MinigameEvents.OnGameOver.RemoveListener(HandleGameOver);
+    }
+
     private void FillQueue()
     {
         m_MinigameScenesQueue.Clear();
@@ -96,5 +106,10 @@ public class LevelSelectionManager : PersistentLazySingleton<LevelSelectionManag
     private void GoToScoreScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(m_ScoreSceneName);
+    }
+
+    private void HandleGameOver(IReadOnlyList<BasePlayerController> players)
+    {
+        GoToNextScene();
     }
 }

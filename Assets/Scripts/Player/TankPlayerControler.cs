@@ -70,6 +70,10 @@ public class TankPlayerControler : BasePlayerController
         m_TankRb1.transform.Rotate(transform.forward, m_AngularDamping * Time.deltaTime * -m_Moving.x);
     }
 
+    private void OnDestroy()
+    {
+        OnDeath?.Invoke(this);
+    }
 
     //Funcion para disparar una proyectil
     public void ShootingAction()
