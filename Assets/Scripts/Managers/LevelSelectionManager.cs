@@ -7,54 +7,75 @@
 using System.IO;
 // using UnityEditor.SearchService;
 using UnityEngine;
+using System.Collections.Generic;
 
-public class LevelSelectionManager : PersistentSingleton<LevelSelectionManager>
+public class LevelSelectionManager : PersistentLazySingleton<LevelSelectionManager>
 {
-    private int m_CurrentMinigameCounter = 0;
+    private enum SceneType { MainMenu, ScoreScene, Minigame }
 
-    public string m_MainMenuSceneName;
-    public string m_ScoreSceneName;
-    public string[] m_MinigamesSceneNames;
+    [SerializeField] private SceneField m_MainMenuSceneName;
+    [SerializeField] private SceneField m_ScoreSceneName;
+    [SerializeField] private List<SceneField> m_MinigameScenes;
+    private Queue<SceneField> m_MinigameScenesQueue = new Queue<SceneField>();
+    private SceneType m_CurrentSceneType = SceneType.MainMenu;
 
-    // private void Awake()
-    // {
-    //     // This manager will stay on all scenes, so we can call the chooseRandomMinigame function from any scene
-    //     DontDestroyOnLoad(transform.gameObject);
-
-    //     DirectoryInfo dir = new DirectoryInfo("Assets/Scenes/TestingScenes");
-    //     FileInfo[] info = dir.GetFiles("*.unity");
-
-    //     m_MinigamesSceneNames = new string[info.Length];
-
-    //     int i = 0;
-    //     foreach (FileInfo f in info)
-    //     {
-    //         m_MinigamesSceneNames[i] = f.Name.Split(".")[0];
-    //         i++;
-    //     }
-    // }
-
-    public void chooseRandomMinigame()
+    private void Start()
     {
-        // Must be defined the inital scenes
-        // int randomIndex = Random.Range(0, UnityEngine.SceneManagement.SceneManager.sceneCount);
-
-        int randomIndex = Random.Range(0, m_MinigamesSceneNames.Length);
-        chooseMinigame(randomIndex);
+        FillQueue();
     }
 
-    public void chooseMinigame(int index)
+    private void FillQueue()
     {
-        // Must be defined the scenes
-        UnityEngine.SceneManagement.SceneManager.LoadScene(m_MinigamesSceneNames[index]);
+        m_MinigameScenesQueue.Clear();
+
+        // Shuffle
+        List<SceneField> shuffledScenes = new List<SceneField>(m_MinigameScenes);
+        for (int i = 0; i < shuffledScenes.Count; i++)
+        {
+            SceneField temp = shuffledScenes[i];
+            int randomIndex = Random.Range(i, shuffledScenes.Count);
+            shuffledScenes[i] = shuffledScenes[randomIndex];
+            shuffledScenes[randomIndex] = temp;
+        }
+
+        foreach (var scene in shuffledScenes)
+        {
+            m_MinigameScenesQueue.Enqueue(scene);
+        }
     }
 
-    public void goToMainMenu()
+    public void GoToNextScene()
+    {
+        switch (m_CurrentSceneType)
+        {
+            case SceneType.MainMenu:
+                ChooseRandomMinigame();
+                m_CurrentSceneType = SceneType.Minigame;
+                break;
+            case SceneType.Minigame:
+                GoToScoreScene();
+                m_CurrentSceneType = SceneType.ScoreScene;
+                break;
+            case SceneType.ScoreScene:
+                GoToMainMenu();
+                m_CurrentSceneType = SceneType.MainMenu;
+                break;
+        }
+    }
+
+    private void ChooseRandomMinigame()
+    {
+        SceneField nextMinigame = m_MinigameScenesQueue.Dequeue();
+        UnityEngine.SceneManagement.SceneManager.LoadScene(nextMinigame);
+    }
+
+    private void GoToMainMenu()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(m_MainMenuSceneName);
+        FillQueue();
     }
 
-    public void goToScoreScene()
+    private void GoToScoreScene()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(m_ScoreSceneName);
     }

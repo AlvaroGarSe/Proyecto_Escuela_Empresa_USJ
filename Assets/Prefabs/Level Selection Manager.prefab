@@ -44,10 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06da9ad1a118417419bc64a9dd92cc12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MainMenuSceneName: 
-  m_ScoreSceneName: 
+  m_MainMenuSceneName:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
+  m_ScoreSceneName:
+    m_SceneAsset: {fileID: 0}
+    m_SceneName: 
   m_MinigamesSceneNames:
-  - SumoMinigame
-  - TankGame
-  - 
-  - 
+  - m_SceneAsset: {fileID: 102900000, guid: 586b53ff5b98eb6a4963819bd985b5da, type: 3}
+    m_SceneName: SumoMinigame
+  - m_SceneAsset: {fileID: 102900000, guid: 9f42849528a00e5438c79b594a96f033, type: 3}
+    m_SceneName: TankGame
