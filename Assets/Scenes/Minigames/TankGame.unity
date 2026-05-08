@@ -650,8 +650,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 9.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -676,7 +676,7 @@ Transform:
   m_GameObject: {fileID: 853059678}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.39, z: -19.46}
+  m_LocalPosition: {x: 0.35, y: 2.37, z: -19.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -766,7 +766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1139071369}
-  - component: {fileID: 1139071368}
+  - component: {fileID: 1139071370}
   m_Layer: 0
   m_Name: SpawnManager
   m_TagString: Untagged
@@ -774,27 +774,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1139071368
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1139071367}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba97ebaf933eeba4d8bd1b19992f3439, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SpawnPoints:
-  - {fileID: 635590476}
-  - {fileID: 1146373792}
-  - {fileID: 1043217236}
-  - {fileID: 1460001076}
-  m_PlayerPrefab: {fileID: 0}
-  t_MaxPlayers: 4
-  t_MinPlayers: 1
-  t_currentPlayers: 0
 --- !u!4 &1139071369
 Transform:
   m_ObjectHideFlags: 0
@@ -814,6 +793,27 @@ Transform:
   - {fileID: 1460001076}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1139071370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1139071367}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1202d906fe5e1927969f228764699f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpawnPoints:
+  - {fileID: 635590476}
+  - {fileID: 1146373792}
+  - {fileID: 1043217236}
+  - {fileID: 1460001076}
+  m_PlayerPrefab: {fileID: 1498171176683842745, guid: d03eb084951c01549961ea6bf4598614, type: 3}
+  OnGameOver:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1146373791
 GameObject:
   m_ObjectHideFlags: 0

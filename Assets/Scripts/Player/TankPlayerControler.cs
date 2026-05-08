@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 
-public class TankPlayerControler : MonoBehaviour
+public class TankPlayerControler : BasePlayerController
 {
     //Script done by [Jorge Cristobal]
     //Script for managin the player movement and shoot actions
@@ -14,7 +11,6 @@ public class TankPlayerControler : MonoBehaviour
     [SerializeField] Rigidbody m_TankRb1;
     [SerializeField] Rigidbody m_Proyectile;
     [SerializeField] private Transform m_CannonTip;
-    public PlayerInput m_PlayerInput;
     private Vector2 m_Moving;
 
     private float m_CurrentSpeed;
@@ -43,21 +39,15 @@ public class TankPlayerControler : MonoBehaviour
     void Start()
     {
         m_TankRb1 = GetComponent<Rigidbody>();
-
-        m_PlayerInput.SwitchCurrentActionMap("Tank");
     }
 
-
-    void Update()
+    private void Update()
     {
-        //InputAction.CallbackContext action;
-        // Movement(action);
-    }
-
-    // Solo almacena el valor; no aplica física aquí
-    public void Movement(InputAction.CallbackContext action)
-    {
-        m_Moving = action.ReadValue<Vector2>();
+        m_Moving = InputController.MoveInput;
+        if (InputController.PrimaryAction.triggered)
+        {
+            ShootingAction();
+        }
     }
 
     private void FixedUpdate()
@@ -78,7 +68,7 @@ public class TankPlayerControler : MonoBehaviour
 
 
     //Funcion para disparar una proyectil
-    public void ShootingAction(InputAction.CallbackContext action)
+    public void ShootingAction()
     {
         //m_ShootTimer -= dt;
 

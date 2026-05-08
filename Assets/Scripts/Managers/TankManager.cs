@@ -1,11 +1,7 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UIElements;
 
+[System.Obsolete("This class is deprecated. Please use TankMinigameManager instead.")]
 public class TankManager : MonoBehaviour
 {
     //*************************************************************************************************
