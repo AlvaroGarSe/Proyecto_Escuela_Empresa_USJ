@@ -43,6 +43,8 @@ public class TankPlayerControler : BasePlayerController
 
     private void Update()
     {
+        if (InputController == null) return;
+
         m_Moving = InputController.MoveInput;
         if (InputController.PrimaryAction.triggered)
         {
@@ -52,6 +54,8 @@ public class TankPlayerControler : BasePlayerController
 
     private void FixedUpdate()
     {
+        if (InputController == null) return;
+
         // ROTACIÓN: eje horizontal (m_Moving.x) -> AddTorque sobre transform.up
         /* m_TankRb1.AddTorque(
              m_Moving.x * m_MaxRotationalSpeed * transform.up * m_angularDecceleration,
