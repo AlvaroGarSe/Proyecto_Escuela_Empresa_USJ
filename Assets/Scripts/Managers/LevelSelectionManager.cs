@@ -24,6 +24,16 @@ public class LevelSelectionManager : PersistentLazySingleton<LevelSelectionManag
         FillQueue();
     }
 
+    private void Update()
+    {
+#if UNITY_EDITOR
+        if (UnityEngine.InputSystem.Keyboard.current.enterKey.wasPressedThisFrame)
+        {
+            GoToNextScene();
+        }
+#endif
+    }
+
     private void FillQueue()
     {
         m_MinigameScenesQueue.Clear();
@@ -57,8 +67,16 @@ public class LevelSelectionManager : PersistentLazySingleton<LevelSelectionManag
                 m_CurrentSceneType = SceneType.ScoreScene;
                 break;
             case SceneType.ScoreScene:
-                GoToMainMenu();
-                m_CurrentSceneType = SceneType.MainMenu;
+                if (m_MinigameScenesQueue.Count == 0)
+                {
+                    GoToMainMenu();
+                    m_CurrentSceneType = SceneType.MainMenu;
+                }
+                else
+                {
+                    ChooseRandomMinigame();
+                    m_CurrentSceneType = SceneType.Minigame;
+                }
                 break;
         }
     }

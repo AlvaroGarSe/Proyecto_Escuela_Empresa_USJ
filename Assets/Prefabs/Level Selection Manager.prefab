@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MainMenuSceneName:
-    m_SceneAsset: {fileID: 0}
-    m_SceneName: 
+    m_SceneAsset: {fileID: 102900000, guid: 70ac950e4bd377342944f8650e0eea38, type: 3}
+    m_SceneName: MainMenuScene
   m_ScoreSceneName:
-    m_SceneAsset: {fileID: 0}
-    m_SceneName: 
-  m_MinigamesSceneNames:
+    m_SceneAsset: {fileID: 102900000, guid: c3c0f03e24ffedc449349555f10bbf1a, type: 3}
+    m_SceneName: ScoreTesting
+  m_MinigameScenes:
   - m_SceneAsset: {fileID: 102900000, guid: 586b53ff5b98eb6a4963819bd985b5da, type: 3}
     m_SceneName: SumoMinigame
   - m_SceneAsset: {fileID: 102900000, guid: 9f42849528a00e5438c79b594a96f033, type: 3}
