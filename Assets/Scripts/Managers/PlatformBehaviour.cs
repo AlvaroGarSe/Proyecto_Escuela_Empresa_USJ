@@ -12,7 +12,7 @@ public class PlatformBehaviour : MonoBehaviour
     // - For the top part: Gets current game speed multpliyer from PlatformManager and adds it to its velocity
     // - Middle part; just changes the state
     // - Bottom part: changes the state; it deactivates the platform itself and returns to the pool
-    // - 
+    
 
     // STATES
     private enum State {Top, Middle, Bottom }
